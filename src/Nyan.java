@@ -1,3 +1,4 @@
+import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PImage;
 import processing.core.PVector;
@@ -6,7 +7,7 @@ import processing.core.PVector;
 * Created by kreved on 17/12/14.
 */
 class Nyan {
-    private Parallax parallax;
+    private PApplet applet;
     final int STATE_HIDDEN = 0;
     final int STATE_DISPLAY = 1;
     final int STATE_FADE_OUT = 2;
@@ -19,10 +20,10 @@ class Nyan {
     int respawnTime;
     final Rct respawnArea = new Rct();
 
-    Nyan(Parallax parallax, int pos_x, int pos_y) {
-        this.parallax = parallax;
+    Nyan(PApplet applet, int pos_x, int pos_y) {
+        this.applet = applet;
         origin = new PVector(pos_x, pos_y);
-        img = parallax.loadImage("res/nyan.png");
+        img = applet.loadImage("res/nyan.png");
         state = STATE_HIDDEN;
     }
 
@@ -36,7 +37,7 @@ class Nyan {
     public void update() {
         switch (state) {
             case STATE_HIDDEN:
-                if (respawn && parallax.millis() > respawnTime) {
+                if (respawn && applet.millis() > respawnTime) {
                     show();
                 }
                 break;
@@ -55,13 +56,13 @@ class Nyan {
 
     public void fade_out() {
         if (state == STATE_DISPLAY) {
-            fadeStart = parallax.frameCount;
+            fadeStart = applet.frameCount;
             state = STATE_FADE_OUT;
         }
     }
 
     public void hide() {
-        respawnTime = parallax.millis() + (int) (parallax.random(0, 0.5f) * 1000);
+        respawnTime = applet.millis() + (int) (applet.random(0, 0.5f) * 1000);
         state = STATE_HIDDEN;
     }
 
@@ -82,30 +83,30 @@ class Nyan {
     }
 
     public void drawFade() {
-        int fadeProgress = (parallax.frameCount - fadeStart) % fadeLength;
+        int fadeProgress = (applet.frameCount - fadeStart) % fadeLength;
         float s = fadeProgress / (float) fadeLength;
-        parallax.pushStyle();
-        parallax.pushMatrix();
-        parallax.imageMode(PConstants.CENTER);
-        parallax.translate(origin.x, origin.y);
-        parallax.scale(1 + 3 * s, 1 + 3 * s);
-        parallax.tint(255, 255 * (1 - s));
-        parallax.image(img, 0, 0);
-        parallax.popMatrix();
-        parallax.popStyle();
+        applet.pushStyle();
+        applet.pushMatrix();
+        applet.imageMode(PConstants.CENTER);
+        applet.translate(origin.x, origin.y);
+        applet.scale(1 + 3 * s, 1 + 3 * s);
+        applet.tint(255, 255 * (1 - s));
+        applet.image(img, 0, 0);
+        applet.popMatrix();
+        applet.popStyle();
         if (fadeProgress == fadeLength - 1) {
             hide();
-            origin.x = parallax.random(respawnArea.origin.x, respawnArea.origin.x + respawnArea.size.x);
-            origin.y = parallax.random(respawnArea.origin.y, respawnArea.origin.y + respawnArea.size.y);
+            origin.x = applet.random(respawnArea.origin.x, respawnArea.origin.x + respawnArea.size.x);
+            origin.y = applet.random(respawnArea.origin.y, respawnArea.origin.y + respawnArea.size.y);
         }
     }
 
     public void drawNyan() {
-        int d = (parallax.frameCount % 60 >= 30 ? 2 : 0);
-        parallax.pushMatrix();
-        parallax.imageMode(PConstants.CENTER);
-        parallax.translate(origin.x + d, origin.y + d);
-        parallax.image(img, 0, 0);
-        parallax.popMatrix();
+        int d = (applet.frameCount % 60 >= 30 ? 2 : 0);
+        applet.pushMatrix();
+        applet.imageMode(PConstants.CENTER);
+        applet.translate(origin.x + d, origin.y + d);
+        applet.image(img, 0, 0);
+        applet.popMatrix();
     }
 }
