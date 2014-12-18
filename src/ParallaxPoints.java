@@ -1,38 +1,45 @@
-/**
-* Created by kreved on 17/12/14.
-*/
+import processing.core.PApplet;
+
 class ParallaxPoints {
-    private Parallax parallax;
+    private PApplet applet;
     boolean b[][];
     float mpfactor;
     int shx;
     int shy;
 
-    ParallaxPoints(Parallax parallax, float pfactor, float sparsity) {
-        this.parallax = parallax;
+    ParallaxPoints(PApplet applet, float pfactor, float sparsity) {
+        this.applet = applet;
         mpfactor = pfactor;
-        shx = (int) (parallax.w * pfactor);
-        shy = (int) (parallax.h * pfactor);
-        b = new boolean[parallax.h + 2 * shy][parallax.w + 2 * shx];
-        for (int i = 0; i < parallax.h + 2 * shy; i++) {
-            for (int j = 0; j < parallax.w + 2 * shx; j++) {
-                b[i][j] = (parallax.random(1) > sparsity);
+        shx = (int) (applet.width * pfactor);
+        shy = (int) (applet.height * pfactor);
+        b = new boolean[applet.height + 2 * shy][applet.width + 2 * shx];
+        for (int i = 0; i < applet.height + 2 * shy; i++) {
+            for (int j = 0; j < applet.width + 2 * shx; j++) {
+                b[i][j] = (applet.random(1) > sparsity);
             }
         }
     }
 
     public void drawPoints() {
-        int shiftx = shx - (int) ((parallax.mouseX - parallax.width / 2) * mpfactor);
-        int shifty = shy - (int) ((parallax.mouseY - parallax.height / 2) * mpfactor);
-        for (int i = 0; i < parallax.height; i++) {
-            for (int j = 0; j < parallax.width; j++) {
+        float t = applet.frameCount;
+        t /= 360; t *= PApplet.TWO_PI;
+        float r = PApplet.sin(1.75f * t);
+        float x = r * PApplet.cos(t);
+        float y = r * PApplet.sin(t);
+        x = applet.width / 2 + applet.width / 2 * x * 0.3f;
+        y = applet.height / 2 + applet.height / 2 * y * 0.3f;
+
+        int shiftx = shx - (int) ((x - applet.width / 2) * mpfactor);
+        int shifty = shy - (int) ((y - applet.height / 2) * mpfactor);
+        for (int i = 0; i < applet.height; i++) {
+            for (int j = 0; j < applet.width; j++) {
                 if (b[i + shifty][j + shiftx]) {
-                    parallax.pushStyle();
-                    if (parallax.random(1) > 0.999f) {
-                        parallax.strokeWeight(2);
+                    applet.pushStyle();
+                    if (applet.random(1) > 0.999f) {
+                        applet.strokeWeight(2);
                     }
-                    parallax.point(j, i);
-                    parallax.popStyle();
+                    applet.point(j, i);
+                    applet.popStyle();
                 }
             }
         }
