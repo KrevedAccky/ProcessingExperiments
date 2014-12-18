@@ -106,7 +106,46 @@ class Nyan {
         applet.pushMatrix();
         applet.imageMode(PConstants.CENTER);
         applet.translate(origin.x + d, origin.y + d);
+        applet.pushMatrix();
+        applet.pushStyle();
+        applet.translate(img.width / 2 - 20, -img.height / 2);
+        applet.scale(0.16f, 0.12f);
+        drawRainbow();
+        applet.popStyle();
+        applet.popMatrix();
         applet.image(img, 0, 0);
         applet.popMatrix();
+    }
+
+    private void drawRainbow() {
+        boolean f = (applet.frameCount % 10) < 5;
+        float w = 0;
+        float h = 0;
+        float d = 10;
+        float l = 100;
+        float hl = 40;
+
+        applet.pushStyle();
+        applet.noStroke();
+        applet.colorMode(PConstants.HSB);
+        int[] colors = {0, 25, 45, 90, 135, 180};
+        for (int i = 0; i < 6; i++) {
+            int hue = colors[i];
+            applet.fill(hue, 255, 255);
+            applet.pushMatrix();
+            applet.translate(0, hl * i);
+            for (int j = 0; j < 4; j++) {
+                float dd = 0;
+                float dw = 0;
+                if(j % 2 == 0) dd = d;
+                if(f) {
+                    dd = d - dd;
+                    dw = 15;
+                }
+                applet.rect(w + j * l + dw, h + dd, l + 1, hl);
+            }
+            applet.popMatrix();
+        }
+        applet.popStyle();
     }
 }
