@@ -1,5 +1,6 @@
 import processing.core.*;
 
+import java.io.File;
 import java.util.HashMap;
 
 public class Parallax extends PApplet {
@@ -58,6 +59,15 @@ public class Parallax extends PApplet {
         }
 
         Util.drawTree(this);
+//        mySaveFrame();
+    }
+
+    private void mySaveFrame() {
+        File o = new File(System.getProperty("user.dir"));
+        o = new File(o, "frames");
+        o.mkdirs();
+        o = new File(o, "nyan-######.png");
+        saveFrame(o.toString());
     }
 
     static public void main(String[] passedArgs) {
